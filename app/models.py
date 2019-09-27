@@ -1,4 +1,5 @@
 import time
+import json
 import datetime
 from . import db
 from .exceptions import ActivityError
@@ -32,6 +33,7 @@ class Project(db.Model):
     academy_linkman_email = db.Column(db.String(24))
     academy_linkman_tel   = db.Column(db.String(16))
     result_index_list     = db.Column(db.Text)
+    member_list     = db.Column(db.Text)
 
     project_category_id = db.Column(db.Integer, nullable=False)
     funding_plan_id = db.Column(db.Integer, nullable=False)
