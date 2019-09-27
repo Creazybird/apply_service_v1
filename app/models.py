@@ -33,8 +33,9 @@ class Project(db.Model):
     academy_linkman_email = db.Column(db.String(24))
     academy_linkman_tel   = db.Column(db.String(16))
     result_index_list     = db.Column(db.Text)
-    member_list     = db.Column(db.Text)
+    member_list           = db.Column(db.Text)
 
+    applicant_id = db.Column(db.Integer, nullable=False)
     project_category_id = db.Column(db.Integer, nullable=False)
     funding_plan_id = db.Column(db.Integer, nullable=False)
 
@@ -63,8 +64,16 @@ class Applicant(db.Model):
     tel      = db.Column(db.String(16))
     location = db.Column(db.String(120))
     zip_code = db.Column(db.String(6))
+    posting  = db.Column(db.Boolean)
 
+    posting_project_id = db.Column(db.Integer)
     accound_id = db.Column(db.Integer, nullable=False)
+
+    def check(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            return f(1, *args, **kwargs)
+        return decorated_function
 
 
 class FundingPlan(db.Model):
