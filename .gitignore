@@ -4,6 +4,7 @@
 .py.save
 .swp
 .json
+.vscode/
 .idea/
 .DS_Store/
 DS_Store/
