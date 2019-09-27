@@ -37,7 +37,7 @@ class Project(db.Model):
 
     applicant_id = db.Column(db.Integer, nullable=False)
     project_category_id = db.Column(db.Integer, nullable=False)
-    funding_plan_id = db.Column(db.Integer, nullable=False)
+    funding_plan_id = db.Column(db.Integer)
 
 
 class ProjectCategory(db.Model):
@@ -91,6 +91,9 @@ class FundingPlan(db.Model):
 
     condition_id = db.Column(db.Integer, nullable=False)
     applicant_id = db.Column(db.Integer, nullable=False)
+
+    def check(self):
+        return int(self.device+self.data+self.meeting+self.travel+self.manage+self.working+self.other) == self.count
 
 
 class Result(db.Model):

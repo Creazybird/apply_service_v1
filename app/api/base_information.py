@@ -4,6 +4,7 @@ from . import api
 from .. import db
 from ..models import Project, Applicant, ProjectCategory, FundingPlan, Result
 
+
 @api.route("/project/posting/",methods=["GET"], endpoint="GetProjectCache")
 @Applicant.check
 def get_project_cache(aid):
@@ -28,12 +29,11 @@ def get_project_cache(aid):
 def post_project_base_information(aid):
     payload = request.json
     applicant = Applicant.query.filter_by(id=aid).first()
-    project = Project()
-    if applicant.posting :
+    project = Project(project_category_id=request.json.get("project_category_id"), applicant_id=aid)
+    if applicant.posting:
         project = Project.query.filter_by(id=applicant.posting_project_id).first()
     else:
         applicant.posting = True
-        project.applicant_id = aid
         project.status = 0
         db.session.add(project)
         db.session.commit()
