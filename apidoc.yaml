@@ -1,0 +1,847 @@
+swagger: '2.0'
+
+### information start ###
+info:
+  description: TO-GATHER api
+  version: 0.0.1
+  title: Work API
+  contact:
+    email: shiinaorez@gmail.com
+    # license
+### information end ###
+
+host: to-gather.muxixyz.com
+basePath: /api/v1.0
+schemes:
+  - https
+  - http
+
+### tag start ###
+
+tags:
+  - name: auth
+    description: authentication
+  
+  - name: activity
+    description: activity service
+  
+  - name: message
+    description: pick message service
+
+### tag end ###
+
+### auth start ###
+securityDefinitions:
+  basic:
+    type: basic
+    description: http basic auth
+  
+  token:
+    type: apiKey
+    description: token
+    name: token
+    in: header
+
+### auth end ###
+
+### path start ###
+
+paths:
+  /auth/login/:
+    post:
+      tags:
+        - auth
+      summary: Login for account by student number.
+      description: Get the token and personal information.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: POSTdata
+          in: body
+          description: information for login
+          schema:
+            required:
+              - std_num
+              - password
+              - username
+            properties:
+              std_num:
+                type: string
+              password:
+                type: string
+              username:
+                type: string
+      responses:
+        200:
+          description: return a token
+          schema:
+            required:
+              - token
+              - username
+              - std_num
+            properties:
+              token:
+                type: string
+              username:
+                type: string
+              std_num:
+                type: string
+        401:
+          description: login fail
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+
+  /activity/post/:
+    post:
+      tags:
+        - activity
+      summary: post a new activity
+      description: receive required information and generate a new pickable obejct
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: POSTdata
+          in: body
+          description: data to generate new pickable
+          schema:
+            required:
+              - year
+              - month
+              - day
+              - time
+              - location
+              - event
+              - question
+              - tel
+              - qq
+            properties:
+              year:
+                type: integer
+              month:
+                type: integer
+              day:
+                type: integer
+              time:
+                type: string
+              location:
+                type: string
+              event:
+                type: string
+              question:
+                type: string
+              tel:
+                type: string
+              qq:
+                type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            required:
+              - activityID
+            properties:
+              activityID:
+                type: integer
+        401:
+          description: authenticate fail
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+        402:
+          description: payload invalid
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+        403:
+          description: POST fail
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+      security:
+        - token: []
+        
+  /activity/{aid}/:
+    get:
+      tags:
+        - activity
+      summary: get information for a activity by aid.
+      description: reveive a activity id and return the information about it.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: aid
+          description: activityID
+          required: true
+          type: integer
+      responses:
+        200:
+          description: information of activity
+          schema:
+            required:
+              - date
+              - time
+              - location
+              - event
+              - qq
+              - tel
+              - question
+              - posterName
+              - posterNum
+              - pickable
+            properties:
+              date:
+                type: string
+              time:
+                type: string
+              location:
+                type: string
+              event:
+                type: string
+              qq:
+                type: string
+              tel:
+                type: string
+              question:
+                type: string
+              posterName:
+                type: string
+              posterNum:
+                type: string
+              status:
+                type: array
+                items:
+                  required:
+                    - pickable
+                    - close
+                  properties:
+                    pickable:
+                      type: boolean
+                    close:
+                      type: boolean
+        401:
+          description: authenticate fail
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+        403:
+          description: activity out of time range
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+        406:
+          description: activity not existed
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+      security:
+        - token: []
+
+    post:
+      tags:
+        - activity
+      summary: pick the activity
+      description: pick the activity
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: aid
+          description: activityID
+          required: true
+          type: integer
+        - in: body
+          name: POSTdata
+          description: post data answer
+          schema:
+            required:
+              - answer
+            properties:
+              answer:
+                type: string
+      responses:
+        200:
+          description: pick the activity successful
+          schema:
+            required:
+              - msg
+            properties:
+              question:
+                type: string
+        401:
+          description: authenticate fail
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+        402:
+          description: already picked it before
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+        403:
+          description: activity out of time range
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+        405:
+          description: activity is over
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+        406:
+          description: activity not existed
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+        407:
+          description: can't pick your self!
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+      security:
+        - token: []
+  
+    put:
+      tags: 
+        - activity
+      summary: close the activity(not delete)
+      description: poster make sure to picker, propbobly close it.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: aid
+          description: activityID
+          required: true
+          type: integer
+        - in: body
+          name: POSTdata
+          description: the answer poster send to picker
+          schema:
+            required:
+              - pickerID
+              - atti
+            properties:
+              pickerID:
+                type: integer
+              atti:
+                type: boolean
+      responses:
+        200:
+          description: makesure successful
+          schema:
+            required:
+              - msg
+              - pickable
+            properties:
+              msg:
+                type: string
+              pickable:
+                type: boolean
+        201:
+          description: refuse successful
+          schema:
+            required:
+              - msg
+              - pickable
+            properties:
+              msg:
+                type: string
+              pickable:
+                type: boolean
+        401:
+          description: authenticate fail
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+        403:
+          description: activity out of time range
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+        405:
+          description: pick is over
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+        406:
+          description: activity not existed
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+        407:
+          description: can't pick your self!
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+      security:
+        - token: []
+
+  /activity/pickable/list/:
+    get:
+      tags:
+        - activity
+      summary: get the pickable activity list random
+      description: verify token and get the pickable list
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: page
+          description: page to get, default is 1, pageSize=10
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            required:
+              - activityList
+              - pageNum
+              - pageMax
+              - hasNext
+              - rowsNum
+            properties:
+              pageNum:
+                type: integer
+              pageMax:
+                type: integer
+              hasNext:
+                type: boolean
+              rowsNum:
+                type: integer
+              activityList:
+                type: array
+                items:
+                  required:
+                    - activityID
+                    - datetime
+                    - event
+                  properties:
+                    datetime:
+                      type: string
+                    location:
+                      type: string
+                    event:
+                      type: string
+        201:
+          description: none activity pickable
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+  
+  /user/{unum}/post-activities/list/:
+    get:
+      tags:
+        - activity
+      summary: get one's post activities list
+      description: pages
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: unum
+          description: user student number
+          required: true
+          type: string
+        - in: path
+          name: page
+          description: page to get, default page is 1, pageSize = 10
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            required:
+              - activityList
+              - pageNum
+              - pageMax
+              - hasNext
+              - rowsNum
+            properties:
+              pageNum:
+                type: integer
+              pageMax:
+                type: integer
+              hasNext:
+                type: boolean
+              rowsNum:
+                type: integer
+              activityList:
+                type: array
+                items:
+                  required:
+                    - activityID
+                    - datetime
+                    - event
+                    - close
+                    - hasMessage
+                  properties:
+                    datetime:
+                      type: string
+                    location:
+                      type: string
+                    event:
+                      type: string
+                    close:
+                      type: boolean
+                    hasMessage:
+                      type: boolean
+        201:
+          description: none activity
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+        401:
+          description: authenticate fail
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+        406:
+          description: User not existed
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+        407:
+          description: please check your self information
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+      security:
+        - token: []
+
+  /user/{unum}/pick-activities/list/:
+    get:
+      tags:
+        - activity
+      summary: get one's picked activities list
+      description: pages
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: unum
+          description: user student number
+          required: true
+          type: string
+        - in: path
+          name: page
+          description: page to get, default is 1, pageSize = 10
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            required:
+              - activityList
+              - pageNum
+              - pageMax
+              - hasNext
+              - rowsNum
+            properties:
+              pageNum:
+                type: integer
+              pageMax:
+                type: integer
+              hasNext:
+                type: boolean
+              rowsNum:
+                type: integer
+              activityList:
+                type: array
+                items:
+                  required:
+                    - activityID
+                    - datetime
+                    - event
+                    - statu
+                  properties:
+                    datetime:
+                      type: string
+                    location:
+                      type: string
+                    event:
+                      type: string
+                    statu:
+                      type: integer # 0-waiting 1-successful 2-fail 
+        201:
+          description: none activity
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+        401:
+          description: authenticate fail
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+        407:
+          description: please check your self information
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+      security:
+        - token: []
+
+  /user/{unum}/message/{mid}/:
+    get:
+      tags:
+        - message
+      summary: get the information about one message
+      description: read, receive message ID and check it
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: mid
+          description: messageID
+          required: true
+          type: integer
+        - in: path
+          name: unum
+          description: user student number
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK, and activity is not closed
+          schema:
+            required:
+              - datetime
+              - location
+              - event
+              - question
+              - answer
+              - picker_id
+              - qq
+              - tel
+              - time
+              - readed
+            properties:
+              datetime:
+                type: string
+              location:
+                type: string
+              event:
+                type: string
+              question:
+                type: string
+              answer:
+                type: string
+              picker_id:
+                type: string
+              qq:
+                type: string
+              tel:
+                type: string
+              time:
+                type: string
+              readed:
+                type: boolean
+        401:
+          description: authenticate fail
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+        406:
+          description: message not existed
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+        407:
+          description: please check your self messages
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+      security:
+        - token: []
+  
+  /user/{unum}/activity/{aid}/message/list/:
+    get:
+      tags:
+        - message
+      summary: get the message list
+      description: page?
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: unum
+          description: student number
+          required: true
+          type: string
+        - in: path
+          name: aid
+          description: activityID
+          required: true
+          type: integer
+        - in: path
+          name: type
+          description: get type, like "all","readed","unreaded"
+          required: true
+          type: string
+      responses:
+        200:
+          description: receive message list
+          schema:
+            required:
+              - messageList
+              - messageCount
+            properties:
+              messageCount:
+                type: integer
+              messageList:
+                type: array
+                items:
+                  required:
+                    - mid
+                  properties:
+                    mid:
+                      type: integer
+        201:
+          description: none message
+          schema:
+            required:
+              - msg
+            properties:
+              msg: 
+                type: string
+        401:
+          description: authenticate fail
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+              pickerName:
+                type: string
+              time:
+                type: string
+        406:
+          description: user not existed
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+        407:
+          description: please check your self messages
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+      security:
+        - token: []
