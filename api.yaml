@@ -1,0 +1,109 @@
+swagger: "2.0"
+info:
+  description: "This is the API document of Chinese Language Committee."
+  version: "2.0.0"
+  title: "Apply Service"
+  contact:
+    email: "Shiinaorez@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "language.committee.cn"
+basePath: "/service/project"
+tags:
+  - name: "projectCache"
+    description: "项目信息缓存API"
+  - name: "baseInformation"
+    description: "项目基本信息API"
+schemes:
+  - "https"
+  - "http"
+paths:
+  /project/posting/:
+    get:
+      tags:
+        - "projectCache"
+      summary: "The API to get the status of project posting."
+      description: "Use this API to get the project be post or not."
+      operationId: "project-posting-statu"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "header"
+          name: "token"
+          description: "The token for authorition."
+          required: true
+          type: string
+      responses:
+        200:
+          description: "Posting"
+        201:
+          description: "Not Posting"
+
+  /project/base_information/:
+    post:
+      tags:
+        - "baseInformation"
+      summary: "Post the base information of project."
+      description: "Please make sure each name of field is right."
+      operationId: "baseInfo-post"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "header"
+          name: "token"
+          description: "The token for authorition."
+          required: true
+          type: string
+        - in: "body"
+          name: "payload"
+          description: "Post the base information fields."
+          required: true
+          schema:
+            $ref: "#/definitions/BaseInformation"
+      responses:
+        200:
+          description: "OK"
+        500:
+          description: "Internal Error"
+
+definitions:
+  BaseInformation:
+    type: "object"
+    required:
+      - "project_category_id"
+      - "name_cn"
+      - "apply_date"
+      - "start_date"
+      - "end_date"
+      - "abstract_cn"
+      - "project_code_1"
+      - "project_code_2"
+    properties:
+      project_category_id:
+        type: "integer"
+      name_cn:
+        type: "string"
+      apply_date:
+        type: "string"
+        format: "date"
+      start_date:
+        type: "string"
+        format: "date"
+      end_date:
+        type: "string"
+        format: "date"
+      abstract_cn:
+        type: "string"
+        format: "text"
+        example: "I am the abstraction of project..."
+      project_code_1:
+        type: "string"
+        example: "010101"
+      project_code_2:
+        type: "string"
+        example: "020202"
