@@ -15,11 +15,46 @@ tags:
     description: "项目信息缓存API"
   - name: "baseInformation"
     description: "项目基本信息API"
+  - name: "fundingPlan"
+    description: "项目经费计划API"
 schemes:
   - "https"
   - "http"
 paths:
-  /project/posting/:
+  /project/new/:
+    get:
+      summary: "If applicant have no project posting, create it."
+      description: "Please make sure applicant posting project is NONE."
+      operationId: "project-create"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json" 
+      parameters:
+        - in: "header"
+          name: "token"
+          description: "The token for authorition."
+          required: true
+          type: string
+      responses:
+        200:
+          description: "OK"
+          schema:
+            required:
+              - project_id
+            properties:
+              project_id:
+                type: integer
+        201:
+          description: "Porject be posting!"
+          schema:
+            required:
+              - project_id
+            properties:
+              project_id:
+                type: integer
+
+  /project/posting/statu/:
     get:
       tags:
         - "projectCache"
@@ -39,15 +74,70 @@ paths:
       responses:
         200:
           description: "Posting"
+          schema:
+            required:
+              - project_id
+            properties: 
+              project_id:
+                type: "integer"
         201:
           description: "Not Posting"
+  
+  /project/posting/cache/base_information/:
+    get:
+      tags:
+        - "projectCache"
+      summary: "If project be posting existed, use this API to get base information cache."
+      operationId: "project-posting-baseInformation"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "header"
+          name: "token"
+          description: "The token for authorition."
+          required: true
+          type: string
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/BaseInformationWithPid"
+        201:
+          description: "No Posting."
+  
+  /project/posting/cache/funding_plan/:
+    get:
+      tags:
+        - "projectCache"
+      summary: "If project be posting existed, use this API to get funding plan data."
+      description: "Please make sure the project which be posting existed."
+      operationId: "project-posting-fundingPlan"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "header"
+          name: "token"
+          description: "The token for authorition."
+          required: true
+          type: string
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/FundingPlan"
+        201:
+          description: "No Posting."
 
-  /project/base_information/:
+  /project/{pid}/base_information/:
     post:
       tags:
         - "baseInformation"
       summary: "Post the base information of project."
-      description: "Please make sure each name of field is right."
+      description: "Please make sure each name of field are right."
       operationId: "baseInfo-post"
       consumes:
         - "application/json"
@@ -59,6 +149,11 @@ paths:
           description: "The token for authorition."
           required: true
           type: string
+        - in: "path"
+          name: "pid"
+          description: "The project id."
+          required: true
+          type: "integer"
         - in: "body"
           name: "payload"
           description: "Post the base information fields."
@@ -70,7 +165,41 @@ paths:
           description: "OK"
         500:
           description: "Internal Error"
-
+  
+  /project/{pid}/funding_plan/:
+    post:
+      tags:
+        - "fundingPlan"
+      summary: "Post the funding plan data of project."
+      description: "Please make sure each name of field are right."
+      operationId: "fundingPlan-post"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "header"
+          name: "token"
+          description: "The token for authorition."
+          required: true
+          type: string
+        - in: "path"
+          name: "pid"
+          description: "The project id posting."
+          required: true
+          type: integer
+        - in: "body"
+          name: "payload"
+          description: "The data of funding plan."
+          required: true
+          schema:
+            $ref: "#/definitions/FundingPlan"
+      responses:
+        200:
+          description: "OK"
+        500:
+          description: "Internal Error"
+    
 definitions:
   BaseInformation:
     type: "object"
@@ -107,3 +236,60 @@ definitions:
       project_code_2:
         type: "string"
         example: "020202"
+  BaseInformationWithPid:
+    type: "object"
+    required:
+      - project_id
+      - data
+    properties:
+      project_id:
+        type: "integer"
+      data:
+        $ref: "#/definitions/BaseInformation"
+  FundingPlan:
+    type: "object"
+    required:
+      - count
+      - device
+      - data
+      - meeting
+      - travel
+      - working
+      - manage
+      - other
+      - years
+    properties: 
+      count:
+        type: integer
+        example: "10"
+      device:
+        type: number
+        format: float
+        example: "1.6"
+      data:
+        type: number
+        format: float
+        example: "1.6"
+      meeting:
+        type: number
+        format: float
+        example: "1.6"
+      travel:
+        type: number
+        format: float
+        example: "1.6"
+      working:
+        type: number
+        format: float
+        example: "1.6"
+      manage:
+        type: number
+        format: float
+        example: "1.6"
+      other:
+        type: number
+        format: float
+        example: "1.6"
+      years:
+        type: string
+        format: json
