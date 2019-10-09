@@ -36,6 +36,11 @@ paths:
           description: "The token for authorition."
           required: true
           type: string
+        - in: "path"
+          name: "category_id"
+          description: "The project category id."
+          required: true
+          type: integer
       responses:
         200:
           description: "OK"
