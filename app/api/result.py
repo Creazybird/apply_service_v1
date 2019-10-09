@@ -2,8 +2,8 @@
 import json
 import datetime
 from . import api
-from ...app import db
-from ...app.models import Project, Applicant, Result
+from .. import db
+from ..models import Project, Applicant, Result
 from flask import jsonify, request
 
 @api.route('/project/<int:pid>/result/get/', methods = ['GET'])

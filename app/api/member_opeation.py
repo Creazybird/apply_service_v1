@@ -1,8 +1,8 @@
 #coding:utf-8
 import json
 from . import api
-from ...app import db
-from ...app.models import Project, Applicant
+from .. import db
+from ..models import Project, Applicant
 from flask import jsonify, request
 
 @api.route('/project/<int:pid>/member/get', methods = ['GET'])

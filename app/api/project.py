@@ -24,3 +24,15 @@ def create_project(aid):
         return jsonify({
             "project_id": project.id,
         }), 200
+
+@api.route("/project/posting/statu/", methods=["GET"], endpoint="ProjectPostingStatu")
+@Applicant.check
+def project_posting_statu(aid):
+    applicant = Applicant.query.filter_by(id=aid).first()
+    if applicant.posting is False:
+        return jsonify({
+            "msg": "You're not posting any project.",
+        }), 201
+    return jsonify({
+        "project_id": applicant.posting_project_id,
+    }), 200
