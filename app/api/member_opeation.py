@@ -5,16 +5,17 @@ from .. import db
 from ..models import Project, Applicant
 from flask import jsonify, request
 
-@api.route('/project/<int:pid>/member/get', methods = ['GET'])
+@api.route('/project/posting/cache/member/', methods = ['GET'])
 @Applicant.check
-def get_members(aid, pid):
+def get_members(aid):
     if request.method == 'GET':
-        project = Project.query.filter_by(id=pid).first()
-        if project != None:
+        applicant = Applicant.query.filter_by(id=aid).first()
+        if applicant.posting:
+            project = Project.query.filter_by(id=applicant.posting_project_id).first()
+            if project == None:
+                return jsonify({"msg": "project is inexistent"}), 404
             member_list = eval(project.member_list)
             return member_list, 200
-        else:
-            return jsonify({"msg":"project is inexistent"}), 404
 
 
 @api.route('/project/<int:pid>/member/edit', methods = ['POST'])
