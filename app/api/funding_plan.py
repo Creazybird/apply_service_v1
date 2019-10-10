@@ -54,6 +54,8 @@ def get_funding_plan_cache(aid):
         }), 201
     project = Project.query.filter_by(id=applicant.posting_project_id).first()
     funding = FundingPlan.query.filter_by(id=project.funding_plan_id).first()
+    if funding.years is None:
+        funding.years = ""
     if funding is None:
         return jsonify("No cache!"), 201
     return jsonify({
