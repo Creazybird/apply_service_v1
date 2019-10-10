@@ -6,7 +6,7 @@ from ..models import Project, Applicant
 from flask import jsonify, request
 
 
-@api.route('/project/posting/cache/unit/get', methods = ['GET'])
+@api.route('/project/posting/cache/unit/', methods = ['GET'])
 @Applicant.check
 def get_information(aid):
     if request.method == 'GET':
@@ -22,12 +22,13 @@ def get_information(aid):
                 'unit_linkman_tel':project.unit_linkman_tel,
                 'academy_linkman':project.academy_linkman,
                 'academy_linkman_email':project.academy_linkman_email,
-                'academy_linkman_tel':project.academy_linkman_tel
+                'academy_linkman_tel':project.academy_linkman_tel,
+                'pid':project.id
             }
             return jsonify({'information':one_unit}),200
 
 
-@api.route('/project/<int:pid>/unit/add', methods = ['POST'])
+@api.route('/project/<int:pid>/unit/add/', methods = ['POST'])
 @Applicant.check
 def add_information(aid, pid):
     if request.method == 'POST':
@@ -43,6 +44,7 @@ def add_information(aid, pid):
         project.academy_linkman_tel = request.get_json().get('academy_linkman_tel')
         db.session.add(project)
         db.session.commit()
+        return jsonify({'msg':'unit imformation add successful'})
 
 
 
