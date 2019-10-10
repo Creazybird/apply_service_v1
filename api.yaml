@@ -137,7 +137,7 @@ paths:
         201:
           description: "No Posting."
 
-  /project/{pid}/base_information/:
+  /project/base_information/:
     post:
       tags:
         - "baseInformation"
@@ -154,11 +154,6 @@ paths:
           description: "The token for authorition."
           required: true
           type: string
-        - in: "path"
-          name: "pid"
-          description: "The project id."
-          required: true
-          type: "integer"
         - in: "body"
           name: "payload"
           description: "Post the base information fields."
@@ -171,7 +166,7 @@ paths:
         500:
           description: "Internal Error"
   
-  /project/{pid}/funding_plan/:
+  /project/funding_plan/:
     post:
       tags:
         - "fundingPlan"
@@ -188,11 +183,6 @@ paths:
           description: "The token for authorition."
           required: true
           type: string
-        - in: "path"
-          name: "pid"
-          description: "The project id posting."
-          required: true
-          type: integer
         - in: "body"
           name: "payload"
           description: "The data of funding plan."
