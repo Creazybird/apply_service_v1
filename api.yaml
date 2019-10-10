@@ -59,6 +59,27 @@ paths:
               project_id:
                 type: integer
 
+  /project/posting/cancel/:
+    get:
+      summary: "The API to cancel the project posting."
+      description: "Please make sure you're posting a project."
+      operationId: "project-posting-cancel"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "header"
+          name: "token"
+          description: "The token for authorition"
+          required: true
+          type: string
+      responses:
+        200:
+          description: "Cancel OK."
+        201:
+          description: "Not Posting"
+
   /project/posting/statu/:
     get:
       tags:

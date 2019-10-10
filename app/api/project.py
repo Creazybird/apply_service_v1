@@ -36,3 +36,19 @@ def project_posting_statu(aid):
     return jsonify({
         "project_id": applicant.posting_project_id,
     }), 200
+
+@api.route("/project/posting/cancel", methods=["GET"], endpoint="ProjectPostingCancel")
+@Applicant.check
+def project_posting_cancel(aid):
+    applicant = Applicant.query.filter_by(id=aid).first()
+    if applicant.posting is False:
+        return jsonify({
+            "msg": "You're not posting any project.",
+        }), 201
+    else:
+        applicant.posting = False
+        db.session.add(applicant)
+        db.session.commit(applicant)
+        return jsonify({
+            "msg": "Cancel OK",
+        }), 200
