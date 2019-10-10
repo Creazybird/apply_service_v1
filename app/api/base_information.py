@@ -5,7 +5,7 @@ from .. import db
 from ..models import Project, Applicant, ProjectCategory, FundingPlan, Result
 
 
-@api.route("/project/posting/",methods=["GET"], endpoint="GetProjectCache")
+@api.route("/project/posting/cache/base_information/",methods=["GET"], endpoint="GetProjectCache")
 @Applicant.check
 def get_project_cache(aid):
     applicant = Applicant.query.filter_by(id=aid).first()

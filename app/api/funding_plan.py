@@ -35,7 +35,7 @@ def post_project_funding_plan(aid, pid):
     return jsonify("ok"), 200
 
 
-@api.route("/project/<int:pid>/funding_plan/", methods=["GET"], endpoint="GetFundingPlanCache")
+@api.route("/project/posting/cache/funding_plan/", methods=["GET"], endpoint="GetFundingPlanCache")
 @Applicant.check
 def get_funding_plan_cache(aid, pid):
     applicant = Applicant.query.filter_by(id=aid).first()
