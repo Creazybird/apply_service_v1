@@ -2,8 +2,7 @@ import sys
 import importlib
 import os
 import time
-from app import create_app, db
-from app.models import User, Activity
+from .app import create_app, db
 from flask_script import Manager, Shell, Command
 from flask_migrate import Migrate, MigrateCommand
 
