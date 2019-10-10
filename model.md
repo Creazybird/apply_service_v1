@@ -23,7 +23,8 @@
 | academy_linkman | string | 学院联系人姓名 |
 | academy_linkman_email | string | 学院联系人邮箱 |
 | academy_linkman_tel | string | 学院联系人电话 |
-| result_index_list | string | {"list": [result_id...]} |
+| result_index_list | string | "[result_id1..., result_id2, ...]"  |
+| member_list | string | {"list":{"name":"",},{},...} |
 | project_category_id | int | 项目类型ID |
 | funding_plan_id | int | 经费计划ID |
 

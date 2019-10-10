@@ -17,6 +17,12 @@ tags:
     description: "项目基本信息API"
   - name: "fundingPlan"
     description: "项目经费计划API"
+  - name: "unitInformation"
+    description: "项目相关单位信息API"
+  - name: "resultInformation"
+    description: "项目成果API"
+  - name: "memberOpeation"
+    description: "项目成员操作API"
 schemes:
   - "https"
   - "http"
