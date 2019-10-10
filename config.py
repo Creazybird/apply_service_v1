@@ -3,15 +3,15 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 DIALECT = 'mysql'
 DRIVER = 'pymysql'
-USERNAME = os.getenv("TOGATHER_USERNAME")
-PASSWORD = os.getenv("TOGATHER_PASSWORD")
-HOST = os.getenv("TOGATHER_HOST")
+USERNAME = os.getenv("LANGUAGE_USERNAME")
+PASSWORD = os.getenv("LANGUAGE_PASSWORD")
+HOST = os.getenv("LANGUAGE_HOST")
 PORT = 3306
-DATABASE = os.getenv("TOGATHER_DBNAME")
+DATABASE = os.getenv("LANGUAGE_DBNAME")
 
 
 class Config:
-    TOGATHER_SECRET_KEY = os.getenv("TOGATHER_SECRET_KEY")
+    LANGUAGE_SECRET_KEY = os.getenv("LANGUAGE_SECRET_KEY")
     SESSION_TYPE = 'filesystem'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_RECORD_QUERIES = True

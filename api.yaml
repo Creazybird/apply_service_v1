@@ -65,6 +65,27 @@ paths:
               project_id:
                 type: integer
 
+  /project/posting/cancel/:
+    get:
+      summary: "The API to cancel the project posting."
+      description: "Please make sure you're posting a project."
+      operationId: "project-posting-cancel"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "header"
+          name: "token"
+          description: "The token for authorition"
+          required: true
+          type: string
+      responses:
+        200:
+          description: "Cancel OK."
+        201:
+          description: "Not Posting"
+
   /project/posting/statu/:
     get:
       tags:
@@ -143,7 +164,7 @@ paths:
         201:
           description: "No Posting."
 
-  /project/{pid}/base_information/:
+  /project/base_information/:
     post:
       tags:
         - "baseInformation"
@@ -160,11 +181,6 @@ paths:
           description: "The token for authorition."
           required: true
           type: string
-        - in: "path"
-          name: "pid"
-          description: "The project id."
-          required: true
-          type: "integer"
         - in: "body"
           name: "payload"
           description: "Post the base information fields."
@@ -177,7 +193,7 @@ paths:
         500:
           description: "Internal Error"
   
-  /project/{pid}/funding_plan/:
+  /project/funding_plan/:
     post:
       tags:
         - "fundingPlan"
@@ -194,11 +210,6 @@ paths:
           description: "The token for authorition."
           required: true
           type: string
-        - in: "path"
-          name: "pid"
-          description: "The project id posting."
-          required: true
-          type: integer
         - in: "body"
           name: "payload"
           description: "The data of funding plan."
