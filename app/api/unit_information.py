@@ -28,6 +28,7 @@ def get_information(aid):
             return jsonify({'information':one_unit}),200
 
 
+
 @api.route('/project/<int:pid>/unit/add/', methods = ['POST'])
 @Applicant.check
 def add_information(aid, pid):

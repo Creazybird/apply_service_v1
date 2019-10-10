@@ -6,7 +6,7 @@ from .. import db
 from ..models import Project, Applicant, Result
 from flask import jsonify, request
 
-@api.route('/project/posting/cache/result/get/', methods = ['GET'])
+@api.route('/project/posting/cache/result/', methods = ['GET'])
 @Applicant.check
 def get_results(aid):
     if request.method == 'GET':
@@ -15,7 +15,9 @@ def get_results(aid):
             project = Project.query.filter_by(id=applicant.posting_project_id).first()
             if project == None:
                 return jsonify({"msg": "project is inexistent"}), 404
-            project_results_list = Result.query.filter_by(project_id=pid).all()
+            if project.result_index_list == None:
+                return jsonify({'msg':'result_list is empty'}), 404
+            project_results_list = Result.query.filter_by(project_id=applicant.posting_project_id).all()
             result_list = []
             if project_results_list == None:
                 return jsonify({"result_list":result_list}), 200
@@ -41,9 +43,9 @@ def get_results(aid):
                 one_result["type"] = result.result_type
                 one_result["start"] = result.start_date
                 one_result["end"] = result.end_date
-                one_result["undertakers"] = result.undertakes
+                one_result["undertakers"] = result.undertakers
                 result_list.append(one_result)
-                return jsonify({"result_list":result_list}), 200
+            return jsonify({"result_list":result_list}), 200
 
 
 @api.route('/project/<int:pid>/result/add/', methods = ['POST'])
@@ -53,19 +55,24 @@ def add_results(aid, pid):
         project = Project.query.filter_by(id=pid).first()
         if project == None:
             return jsonify({"msg": "project is inexistent"}), 404
-        name = request.get_json().get('name')
-        type = request.get_json().get('type')
-        start = request.get_json().get('start')
-        start = datetime.datetime.strptime(start,"%Y%m%d")
-        end = request.get_json().get('end')
-        end = datetime.datetime.strptime(end, "%Y%m%d")
-        result = Result(result_name=name,
-                        result_type=type,
-                        start_date=start,
-                        end_date=end)
+        result_name = request.get_json().get('result_name')
+        result_type = request.get_json().get('result_type')
+        result_start = request.get_json().get('result_start')
+        #result_start = datetime.datetime.strptime(result_start,"%Y-%m-%d")
+        result_end = request.get_json().get('result_end')
+        #result_end = datetime.datetime.strptime(result_end, "%Y-%m-%d")
+        result_undertakers = request.get_json().get('result_undertakers')
+        result = Result(result_name=result_name,
+                        result_type=result_type,
+                        start_date=result_start,
+                        end_date=result_end,
+                        undertakers=result_undertakers,
+                        project_id=pid)
         db.session.add(result)
         db.session.commit()
-        result_list = eval(project.result_index_list)
+        result_list = []
+        if project.result_index_list != None:
+            result_list = eval(project.result_index_list)
         result_list.append(result.id)
         project.result_index_list = str(result_list)
         db.session.add(project)
@@ -87,7 +94,7 @@ def delete_result(aid, pid, rid):
             return jsonify({'msg':'result is inexitent'}),200
 
 
-@api.route('/project/<int:pid>/result/save/', method = ['POST'])
+@api.route('/project/<int:pid>/result/save/', methods = ['POST'])
 @Applicant.check
 def save_results(aid, pid):
     if request.method == 'POST':
@@ -97,7 +104,7 @@ def save_results(aid, pid):
         results_index = request.get_json().get('index')
         if results_index == None:
             return jsonify({'msg':'index is empty'}), 404
-        index = results_index.split(' ')
+        index = [int(x) for x in results_index.split(' ')]
         project.result_index_list = str(index)
         db.session.add(project)
         db.session.commit()
