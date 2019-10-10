@@ -46,7 +46,7 @@ def get_results(aid, pid):
             return jsonify({"msg":"project is inexistent"}), 404
 
 
-@api.route('/project/<int:pid>/result/add/', methods = ['GET'])
+@api.route('/project/<int:pid>/result/add/', methods = ['POST'])
 @Applicant.check
 def add_results(aid, pid):
     if request.method == "POST":
@@ -70,6 +70,20 @@ def add_results(aid, pid):
             db.session.add(project)
             db.session.commit()
             return jsonify({"msg":"result add successful"}), 200
+        else:
+            return jsonify({"msg": "project is inexistent"}), 404
+
+
+@api.route('/project/<int:pid>/result/<int:rid>/delete/', methods = ['POST'])
+@Applicant.check
+def delete_results(aid, pid, rid):
+    if request.method == 'POST':
+        project = Project.query.filter_by(id=pid).first()
+        if project != None:
+            if Result.query.filter_by(id=rid).delete():
+                return jsonify({'msg':'result have been deleted'}),200
+            else:
+                return jsonify({'msg':'result is inexitent'}),200
         else:
             return jsonify({"msg": "project is inexistent"}), 404
 
