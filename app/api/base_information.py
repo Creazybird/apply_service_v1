@@ -33,13 +33,9 @@ def post_project_base_information(aid):
     if applicant.posting:
         project = Project.query.filter_by(id=applicant.posting_project_id).first()
     else:
-        applicant.posting = True
-        project.status = 0
-        db.session.add(project)
-        db.session.commit()
-        applicant.posting_project_id = project.id
-        db.session.add(applicant)
-        db.session.commit()
+        return jsonify({
+            "msg": "Not Posting, please create a project first.",
+        }), 201
 
     project.name_cn = payload.get("name_cn")
     project.apply_date = payload.get("apply_date")

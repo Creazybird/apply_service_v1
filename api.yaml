@@ -129,7 +129,7 @@ paths:
         200:
           description: "OK"
           schema:
-            $ref: "#/definitions/BaseInformationWithPid"
+            $ref: "#/definitions/BaseInformation"
         201:
           description: "No Posting."
   
@@ -184,8 +184,8 @@ paths:
       responses:
         200:
           description: "OK"
-        500:
-          description: "Internal Error"
+        201:
+          description: "Not Posting."
   
   /project/funding_plan/:
     post:
@@ -252,16 +252,6 @@ definitions:
       project_code_2:
         type: "string"
         example: "020202"
-  BaseInformationWithPid:
-    type: "object"
-    required:
-      - project_id
-      - data
-    properties:
-      project_id:
-        type: "integer"
-      data:
-        $ref: "#/definitions/BaseInformation"
   FundingPlan:
     type: "object"
     required:
