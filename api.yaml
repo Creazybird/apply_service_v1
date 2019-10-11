@@ -164,6 +164,83 @@ paths:
         201:
           description: "No Posting."
 
+  /project/posting/cache/unit/:
+    get:
+      tags:
+        - "projectCache"
+      summary: "If project be posting existed, use this API to get funding plan data."
+      description: "Please make sure the project which be posting existed."
+      operationId: "project-posting-fundingPlan"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "header"
+          name: "token"
+          description: "The token for authorition."
+          required: true
+          type: string
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Unit"
+        404:
+          description: "project is inexistent"
+
+  /project/posting/cache/result/:
+    get:
+      tags:
+        - "projectCache"
+      summary: "If project be posting existed, use this API to get funding plan data."
+      description: "Please make sure the project which be posting existed."
+      operationId: "project-posting-fundingPlan"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "header"
+          name: "token"
+          description: "The token for authorition."
+          required: true
+          type: string
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Result"
+        404:
+          description: "project is inexistent/result_list is empty/result is inexistent"
+
+  /project/posting/cache/member/:
+    get:
+      tags:
+        - "projectCache"
+      summary: "If project be posting existed, use this API to get funding plan data."
+      description: "Please make sure the project which be posting existed."
+      operationId: "project-posting-fundingPlan"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "header"
+          name: "token"
+          description: "The token for authorition."
+          required: true
+          type: string
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Member"
+        404:
+          description: "project is inexistent/member_list is empty"
+  
+  
+  
   /project/base_information/:
     post:
       tags:
@@ -192,13 +269,17 @@ paths:
           description: "OK"
         201:
           description: "Not Posting."
+
+
   
   /project/funding_plan/:
     post:
       tags:
         - "fundingPlan"
       summary: "Post the funding plan data of project."
-      description: "Please make sure each name of field are right."
+      description: "Please make sure each name of field are right
+      - email
+      - tel."
       operationId: "fundingPlan-post"
       consumes:
         - "application/json"
@@ -221,6 +302,157 @@ paths:
           description: "OK"
         500:
           description: "Internal Error"
+
+  /project/unit/:
+    post:
+      tags:
+        - "unitInformation"
+      summary: "Post the base information of project."
+      description: "Please make sure each name of field are right."
+      operationId: "baseInfo-post"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "header"
+          name: "token"
+          description: "The token for authorition."
+          required: true
+          type: string
+        - in: "body"
+          name: "payload"
+          description: "Post the base information fields."
+          required: true
+          schema:
+            $ref: "#/definitions/Unit"
+      responses:
+        200:
+          description: "unit imformation add successful"
+        404:
+          description: "project is inexistent"
+  
+  /project/result/:
+    post:
+      tags:
+        - "resultInformation"
+      summary: "Post the base information of project."
+      description: "Please make sure each name of field are right."
+      operationId: "baseInfo-post"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "header"
+          name: "token"
+          description: "The token for authorition."
+          required: true
+          type: string
+        - in: "body"
+          name: "payload"
+          description: "Post the base information fields."
+          required: true
+          schema:
+            $ref: "#/definitions/Result"
+      responses:
+        200:
+          description: "result add successful"
+        404:
+          description: "project is inexistent"
+
+  /project/result/{rid}/delete/:
+    delete:
+      tags:
+        - "resultInformation"
+      summary: "Post the base information of project."
+      description: "Please make sure each name of field are right."
+      operationId: "baseInfo-post"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "header"
+          name: "token"
+          description: "The token for authorition."
+          required: true
+          type: string
+        - in: "path"
+          name: "rid"
+          description: "Tne id of the result"
+          required: true
+          type: number
+          format: int
+      responses:
+        200:
+          description: "result have been deleted"
+        404:
+          description: "project is inexistent/result is inexistent"
+  
+  /project/result/save/:
+    post:
+      tags:
+        - "resultInformation"
+      summary: "Post the base information of project."
+      description: "Please make sure each name of field are right."
+      operationId: "baseInfo-post"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "header"
+          name: "token"
+          description: "The token for authorition."
+          required: true
+          type: string
+        - in: "body"
+          name: "payload"
+          description: "Post the base information fields."
+          required: true
+          schema:
+            required:
+              - index
+            properties:
+              index: 
+                type: string
+                example: "1 2 4 3 5"
+      responses:
+        200:
+          description: "result saved"
+        404:
+          description: "project is inexistent/index is empty"
+  
+  /project/member/edit/:
+    post:
+      tags:
+        - "memberOpeation"
+      summary: "Post the base information of project."
+      description: "Please make sure each name of field are right."
+      operationId: "baseInfo-post"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "header"
+          name: "token"
+          description: "The token for authorition."
+          required: true
+          type: string
+        - in: "body"
+          name: "payload"
+          description: "Post the base information fields."
+          required: true
+          schema:
+            $ref: "#/definitions/Member"
+      responses:
+        200:
+          description: "edit member successful"
+        404:
+          description: "project is inexistent"
+
     
 definitions:
   BaseInformation:
@@ -305,3 +537,107 @@ definitions:
       years:
         type: string
         format: json
+  Unit:
+    type: "object"
+    required:
+      - work_unit
+      - unit_linkman
+      - unit_linkman_email
+      - unit_linkman_tel
+      - academy_linkman
+      - academy_linkman_email
+      - academy_linkman_tel
+    properties:
+      work_unit:
+        type: string
+        example: "华中师范大学"
+      unit_linkman:
+        type: string
+        example: "sry"
+      unit_linkman_email:
+        type: string
+        example: "1@1.com"
+      unit_linkman_tel:
+        type: string
+        example: "123123123"
+      academy_linkman:
+        type: string
+        example: "sry"
+      academy_linkman_email:
+        type: string
+        example: "1@1.com"
+      academy_linkman_tel:
+        type: string
+        example: "123123123"
+  Result:
+    type: "object"
+    required:
+      - id
+      - name
+      - type
+      - start
+      - end
+      - is_key
+      - undertakers
+      - participants
+    properties: 
+      id: 
+        type: number
+        format: int
+        example: 1
+      name:
+        type: string
+        example: "成果1"
+      type:
+        type: number
+        format: int
+        example: 1
+      start:
+        type: string
+        format: "date"
+        example: "2019-10-11"
+      end:
+        type: string
+        format: "date"
+        example: "2019-10-11"
+      is_key:
+        type: boolean
+        example: 0/1
+      undertakers:
+        type: string
+        example: "sry, cgh, 123"
+      participants:
+        type: string
+        example: "sry, cgh, 123"        
+
+  Member:
+    type: "object"
+    required:
+      - member_list
+    properties:
+      member_list:
+        type: "object"
+        description: "a list of members"
+        required:
+          - name
+          - email
+          - tel
+          - job
+          - unit
+        properties: 
+          name:
+            type: string
+            example: "sry"
+          email:
+            type: string
+            example: "1@1.com"
+          tel:
+            type: string
+            example: "1312312312312"
+          job:
+            type: string
+            example: "教授"
+          unit:
+            type: string
+            example: "华中师范大学"
+        
