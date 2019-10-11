@@ -79,4 +79,6 @@
 | result_type | int | 不知道有多少 | 
 | start_date | date | 研究阶段开始时间 |
 | end_date | date | 研究阶段结束时间 |
+| is_key | boolean | 是否为核心成果 |
 | undertakers | string | 承担者们 |
+| participants | string | 参与者们 |

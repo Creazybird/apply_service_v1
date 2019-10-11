@@ -103,6 +103,8 @@ class Result(db.Model):
     result_type = db.Column(db.Integer, default=0)
     start_date = db.Column(db.Date)
     end_date = db.Column(db.Date)
-    undertakes = db.Column(db.String(128))
+    is_key = db.Column(db.Boolean)
+    undertakers = db.Column(db.String(128))
+    participants = db.Column(db.String(128))
 
     project_id = db.Column(db.Integer, nullable=False)

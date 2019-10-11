@@ -31,7 +31,9 @@ def get_results(aid):
                 "type":"",
                 "start":"",
                 "end":"",
+                "is_key": False,
                 "undertakers":"",
+                "participants": "",
             }
             for index in result_index_list:
                 result_index = project_results_index_list.index(index)
@@ -43,7 +45,9 @@ def get_results(aid):
                 one_result["type"] = result.result_type
                 one_result["start"] = result.start_date
                 one_result["end"] = result.end_date
+                one_result["is_key"] = result.is_key
                 one_result["undertakers"] = result.undertakers
+                one_result["participants"] = result.participants
                 result_list.append(one_result)
             return jsonify({"result_list":result_list}), 200
 
@@ -61,13 +65,16 @@ def add_results(aid, pid):
         #result_start = datetime.datetime.strptime(result_start,"%Y-%m-%d")
         result_end = request.get_json().get('result_end')
         #result_end = datetime.datetime.strptime(result_end, "%Y-%m-%d")
+        result_is_key = request.get_json().get('is_key')
         result_undertakers = request.get_json().get('result_undertakers')
+        result_participants = request.get_json().get('result_participants')
         result = Result(result_name=result_name,
                         result_type=result_type,
                         start_date=result_start,
                         end_date=result_end,
+                        is_key=result_is_key,
                         undertakers=result_undertakers,
-                        project_id=pid)
+                        participants=result_participants)
         db.session.add(result)
         db.session.commit()
         result_list = []
@@ -81,9 +88,11 @@ def add_results(aid, pid):
 
 
 
-@api.route('/project/<int:pid>/result/<int:rid>/delete/', methods = ['POST'])
+@api.route('/project/result/<int:rid>/delete/', methods = ['POST'])
 @Applicant.check
-def delete_result(aid, pid, rid):
+def delete_result(aid, rid):
+    applicant = Applicant.query.filter_by(id=aid).first()
+    pid = applicant.posting_project_id
     if request.method == 'POST':
         project = Project.query.filter_by(id=pid).first()
         if project == None:
@@ -94,9 +103,11 @@ def delete_result(aid, pid, rid):
             return jsonify({'msg':'result is inexitent'}),200
 
 
-@api.route('/project/<int:pid>/result/save/', methods = ['POST'])
+@api.route('/project/result/save/', methods = ['POST'])
 @Applicant.check
-def save_results(aid, pid):
+def save_results(aid):
+    applicant = Applicant.query.filter_by(id=aid).first()
+    pid = applicant.posting_project_id
     if request.method == 'POST':
         project = Project.query.filter_by(id=pid).first()
         if project == None:
@@ -109,4 +120,3 @@ def save_results(aid, pid):
         db.session.add(project)
         db.session.commit()
         return jsonify({'msg':'result saved'}),200
-
