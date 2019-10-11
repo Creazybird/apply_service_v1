@@ -14,11 +14,13 @@ def get_members(aid):
             project = Project.query.filter_by(id=applicant.posting_project_id).first()
             if project == None:
                 return jsonify({"msg": "project is inexistent"}), 404
+            if project.member_list == None:
+                return jsonify({'msg':'member_list is empty'}), 404
             member_list = eval(project.member_list)
             return member_list, 200
 
 
-@api.route('/project/<int:pid>/member/edit', methods = ['POST'])
+@api.route('/project/<int:pid>/member/edit/', methods = ['POST'])
 @Applicant.check
 def edit_members(aid, pid):
     if request.method == "POST":
