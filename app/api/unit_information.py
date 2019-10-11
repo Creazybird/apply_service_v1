@@ -23,7 +23,6 @@ def get_information(aid):
                 'academy_linkman':project.academy_linkman,
                 'academy_linkman_email':project.academy_linkman_email,
                 'academy_linkman_tel':project.academy_linkman_tel,
-                'pid':project.id
             }
             return jsonify({'information':one_unit}),200
 
