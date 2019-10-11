@@ -48,7 +48,7 @@ def project_posting_cancel(aid):
     else:
         applicant.posting = False
         db.session.add(applicant)
-        db.session.commit(applicant)
+        db.session.commit()
         return jsonify({
             "msg": "Cancel OK",
         }), 200
