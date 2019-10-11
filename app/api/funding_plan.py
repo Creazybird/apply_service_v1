@@ -19,7 +19,7 @@ def post_project_funding_plan(aid):
     payload = request.json
     funding = FundingPlan.query.filter_by(id=project.funding_plan_id).first()
     if funding is None:
-        funding = FundingPlan(condition_id=1, applicant_id=aid)
+        funding = FundingPlan(condition_id=1, applicant_id=aid, years=json.dumps({}))
         db.session.add(funding)
         db.session.commit()
         project.funding_plan_id = funding.id
@@ -54,10 +54,10 @@ def get_funding_plan_cache(aid):
         }), 201
     project = Project.query.filter_by(id=applicant.posting_project_id).first()
     funding = FundingPlan.query.filter_by(id=project.funding_plan_id).first()
-    if funding.years is None:
-        funding.years = ""
     if funding is None:
-        return jsonify("No cache!"), 201
+        funding = FundingPlan(condition_id=1, applicant_id=aid, years=json.dumps({}))
+        db.session.add(funding)
+        db.session.commit()
     return jsonify({
         "count": funding.count,
         "device": funding.device,
