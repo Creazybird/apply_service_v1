@@ -52,10 +52,12 @@ def get_results(aid):
             return jsonify({"result_list":result_list}), 200
 
 
-@api.route('/project/<int:pid>/result/add/', methods = ['POST'])
+@api.route('/project/result/', methods = ['POST'])
 @Applicant.check
-def add_results(aid, pid):
+def add_results(aid):
     if request.method == "POST":
+        applicant = Applicant.query.filter_by(id=aid).first()
+        pid = applicant.posting_project_id
         project = Project.query.filter_by(id=pid).first()
         if project == None:
             return jsonify({"msg": "project is inexistent"}), 404
@@ -100,7 +102,7 @@ def delete_result(aid, rid):
         if Result.query.filter_by(id=rid).delete():
             return jsonify({'msg':'result have been deleted'}),200
         else:
-            return jsonify({'msg':'result is inexitent'}),200
+            return jsonify({'msg':'result is inexitent'}),404
 
 
 @api.route('/project/result/save/', methods = ['POST'])

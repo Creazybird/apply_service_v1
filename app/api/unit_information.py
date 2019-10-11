@@ -28,23 +28,26 @@ def get_information(aid):
 
 
 
-@api.route('/project/<int:pid>/unit/add/', methods = ['POST'])
+@api.route('/project/unit/', methods = ['POST'])
 @Applicant.check
-def add_information(aid, pid):
+def add_information(aid):
     if request.method == 'POST':
-        project = Project.query.filter_by(id=pid).first()
-        if project == None:
-            return jsonify({"msg": "project is inexistent"}), 404
-        project.work_unit = request.get_json().get('work_unit')
-        project.unit_linkman = request.get_json().get('unit_linkman')
-        project.unit_linkman_email = request.get_json().get('unit_linkman_email')
-        project.unit_linkman_tel =request.get_json().get('unit_linkman_tel')
-        project.academy_linkman = request.get_json().get('academy_linkman')
-        project.academy_linkman_email = request.get_json().get('academy_linkman_email')
-        project.academy_linkman_tel = request.get_json().get('academy_linkman_tel')
-        db.session.add(project)
-        db.session.commit()
-        return jsonify({'msg':'unit imformation add successful'})
+        applicant = Applicant.query.filter_by(id=aid).first()
+        if applicant.posting:
+            pid = applicant.posting_project_id
+            project = Project.query.filter_by(id=pid).first()
+            if project == None:
+                return jsonify({"msg": "project is inexistent"}), 404
+            project.work_unit = request.get_json().get('work_unit')
+            project.unit_linkman = request.get_json().get('unit_linkman')
+            project.unit_linkman_email = request.get_json().get('unit_linkman_email')
+            project.unit_linkman_tel =request.get_json().get('unit_linkman_tel')
+            project.academy_linkman = request.get_json().get('academy_linkman')
+            project.academy_linkman_email = request.get_json().get('academy_linkman_email')
+            project.academy_linkman_tel = request.get_json().get('academy_linkman_tel')
+            db.session.add(project)
+            db.session.commit()
+            return jsonify({'msg':'unit imformation add successful'})
 
 
 

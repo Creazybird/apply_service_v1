@@ -20,18 +20,21 @@ def get_members(aid):
             return member_list, 200
 
 
-@api.route('/project/<int:pid>/member/edit/', methods = ['POST'])
+@api.route('/project/member/edit/', methods = ['POST'])
 @Applicant.check
-def edit_members(aid, pid):
+def edit_members(aid):
     if request.method == "POST":
-        member_json = request.get_json()
-        project = Project.query.filter_by(id=pid).first()
-        if project != None:
-            project.member_list = str(member_json)
-            db.session.add(project)
-            db.session.commit()
-            return jsonify({"msg":"edit member successful"}),200
-        else:
-            return jsonify({"msg":"project is inexistent "}), 404
+        applicant = Applicant.query.filter_by(id=aid).first()
+        if applicant.posting:
+            pid = applicant.posting_project_id
+            member_json = request.get_json()
+            project = Project.query.filter_by(id=pid).first()
+            if project != None:
+                project.member_list = str(member_json)
+                db.session.add(project)
+                db.session.commit()
+                return jsonify({"msg":"edit member successful"}),200
+            else:
+                return jsonify({"msg":"project is inexistent "}), 404
 
 
